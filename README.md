@@ -1,2 +1,15 @@
-# lua_mini_games
-Collection of mini games created in Lua  
+# Lua mini games  
+Collection of mini games created in Lua programming language.
+
+## List of games
+- [x] [Typing game](./typing-game)
+- [x] [Vim key mapping game](./vim-key-mapping-game)
+
+## How to run the games
+1. Install lua in your system.
+2. Clone the repository.
+3. Go to the game directory and run the game using the following command:
+```bash
+lua main.lua
+```
+
