@@ -2,8 +2,8 @@
 Collection of mini games created in Lua programming language.
 
 ## List of games
-- [x] [Typing game](./typing-game)
-- [x] [Vim key mapping game](./vim-key-mapping-game)
+- [x] [Typing game](./typing_game)
+- [x] [Vim key mapping game](./vim_key_mapping_game)
 
 ## How to run the games
 1. Install lua in your system.
