@@ -1,3 +1,5 @@
+local common = require("lib.common")
+
 -- Define ANSI escape sequences for colors
 local colors = {
     red = "\27[31m",
@@ -138,7 +140,8 @@ function KeyMappingGame:display_final_score()
 end
 
 -- Main function to run the game
-function KeyMappingGame:main()
+function KeyMappingGame:run_game()
+    common.clear_screen()
     -- Setup game
     print("Welcome to Vim Key Mapping Trainer!")
     print("-----------------------------------")
@@ -193,6 +196,4 @@ function KeyMappingGame:main()
     self:display_final_score()
 end
 
---return KeyMappingGame
-local key_mapping_game = KeyMappingGame:create()
-key_mapping_game:main()
+return KeyMappingGame
