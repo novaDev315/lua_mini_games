@@ -1,0 +1,3 @@
+# Project Intelligence
+
+- Always update the memory bank (`.memory-bank` directory) after significant changes to the codebase, especially when new features are added, existing features are modified, or the project structure changes. This ensures the project documentation remains current and accurate.
