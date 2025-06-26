@@ -2,13 +2,24 @@
 
 ## What Works
 
-*   The game engine is functional.
-*   The menu system allows the user to select a game to play.
-*   The `typing_game` and `vim_key_mapping_game` are integrated with the game engine.
-*   A high score system has been implemented and integrated into both games.
-*   The UI has been improved with colored output and better formatting.
-*   Post-game experience enhanced: score displayed, play again/main menu options provided.
+- The project structure has been refactored to be more modular.
+- The `Engine` module is in place to manage game registration and execution.
+- Basic utility modules for UI, JSON, and high scores are available.
+- The `main.lua` file has been updated to use the new `Engine`.
 
 ## What's Left to Build
 
-*   More games.
+- Implement the core logic within the `Engine` module to handle game selection and execution flow.
+- Integrate the existing Typing Game and Vim Key Mapping Game with the new `Engine`.
+- Develop the full high score functionality (saving, loading, displaying).
+- Enhance the user interface for a better game selection and in-game experience.
+
+## Current Status
+
+The project is in a refactoring phase, establishing a solid foundation for future game development. The core structure is in place, and the next steps involve integrating existing games and implementing core functionalities.
+
+## Known Issues
+
+- Existing games are not yet integrated with the new `Engine` and will not run directly.
+- High score functionality is not yet implemented.
+- The UI is currently minimal and requires further development.
