@@ -1,3 +1,4 @@
+local common = require("lib.common")
 local TypingGame = {}
 
 function TypingGame:get_level(speed)
@@ -11,6 +12,7 @@ function TypingGame:get_level(speed)
 end
 
 function TypingGame:run_game()
+    common.clear_screen()
     print("Welcome to the Typing Game!")
     print("Select your level: ")
     print("1. Beginner")
@@ -61,5 +63,4 @@ function TypingGame:run_game()
     print("Recommended level: " .. level_recommended)
 end
 
---return TypingGame
-TypingGame:run_game()
+return TypingGame
