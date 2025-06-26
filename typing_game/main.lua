@@ -1,4 +1,7 @@
-local common = require("lib.common")
+local utils = require("lib.utils")
+local Highscore = require("lib.highscore")
+local UI = require("lib.ui")
+
 local TypingGame = {}
 
 function TypingGame:get_level(speed)
@@ -12,12 +15,11 @@ function TypingGame:get_level(speed)
 end
 
 function TypingGame:run_game()
-    common.clear_screen()
-    print("Welcome to the Typing Game!")
-    print("Select your level: ")
-    print("1. Beginner")
-    print("2. Intermediate")
-    print("3. Advanced")
+    UI:display_title("Typing Game")
+    UI:display_message("Select your level:", UI.colors.cyan)
+    UI:display_message("1. Beginner", UI.colors.white)
+    UI:display_message("2. Intermediate", UI.colors.white)
+    UI:display_message("3. Advanced", UI.colors.white)
 
     local choice = tonumber(io.read())
     local level
@@ -28,11 +30,11 @@ function TypingGame:run_game()
     elseif choice == 3 then
         level = "advanced"
     else
-        print("Invalid choice. Please select a valid level.")
+        UI:display_message("Invalid choice. Please select a valid level.", UI.colors.red)
         return
     end
 
-    print("You've chosen " .. level .. " level.")
+    UI:display_message("You've chosen " .. level .. " level.", UI.colors.green)
     local words = {"apple", "banana", "cherry", "dog", "elephant", "frog", "giraffe", "house", "igloo", "jungle"}
     local words_to_type = {}
     if level == "beginner" then
@@ -47,7 +49,7 @@ function TypingGame:run_game()
     local score = 0
 
     for _, word in ipairs(words_to_type) do
-        print("Type the word: " .. word)
+        UI:display_message("Type the word: " .. word, UI.colors.yellow)
         local user_input = io.read()
         if user_input == word then
             score = score + 1
@@ -58,9 +60,31 @@ function TypingGame:run_game()
     local elapsed_time = os.difftime(end_time, start_time)
     local words_per_minute = (score / elapsed_time) * 60
 
-    print("Your typing speed: " .. string.format("%.2f", words_per_minute) .. " words per minute")
+    UI:display_message("Your typing speed: " .. string.format("%.2f", words_per_minute) .. " words per minute", UI.colors.green)
     local level_recommended = self:get_level(words_per_minute)
-    print("Recommended level: " .. level_recommended)
+    UI:display_message("Recommended level: " .. level_recommended, UI.colors.green)
+
+    -- Update high score
+    local is_new_highscore = Highscore:update_score("Typing Game", words_per_minute)
+    if is_new_highscore then
+        UI:display_message("New High Score for Typing Game!", UI.colors.bright_magenta)
+    end
+
+    while true do
+        UI:display_message("\nWhat would you like to do next?", UI.colors.cyan)
+        UI:display_message("1. Play again", UI.colors.white)
+        UI:display_message("2. Return to main menu", UI.colors.white)
+        local choice = io.read()
+
+        if choice == "1" then
+            self:run_game()
+            break
+        elseif choice == "2" then
+            break
+        else
+            UI:display_message("Invalid choice. Please try again.", UI.colors.red)
+        end
+    end
 end
 
 return TypingGame

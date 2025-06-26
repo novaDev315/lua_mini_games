@@ -1,4 +1,6 @@
-local common = require("lib.common")
+local utils = require("lib.utils")
+local Highscore = require("lib.highscore")
+local UI = require("lib.ui")
 
 -- Define ANSI escape sequences for colors
 local colors = {
@@ -86,7 +88,7 @@ end
 -- Function to display question
 function KeyMappingGame:display_question(task)
     self.total_questions = self.total_questions - 1
-    print("Question " .. (self.total_questions_initial - self.total_questions) .. ": What is the key map for " .. colors.red .. task .. colors.reset .. "?")
+    UI:display_message("Question " .. (self.total_questions_initial - self.total_questions) .. ": What is the key map for " .. colors.red .. task .. colors.reset .. "?", UI.colors.white)
 end
 
 -- Function to get user input
@@ -96,25 +98,20 @@ end
 
 -- check if two strings are equal
 function KeyMappingGame:is_string_equal(str1, str2)
-    return self:trim(str1) == self:trim(str2)
-end
-
--- trim leading and trailing whitespace
-function KeyMappingGame:trim(text)
-    return text:match("^%s*(.-)%s*$")
+    return utils.trim(str1) == utils.trim(str2)
 end
 
 -- Function to validate user input
 function KeyMappingGame:validate_input(user_input)
     -- Check if the user wants to stop the game
     if user_input == "/stop" then
-        print("Exiting the game.")
+        UI:display_message("Exiting the game.", UI.colors.red)
         os.exit()
     end
 
     -- Check if the input is valid
     if user_input == "" then
-        print("Invalid input. Please provide a valid key mapping.")
+        UI:display_message("Invalid input. Please provide a valid key mapping.", UI.colors.red)
         return false
     end
 
@@ -124,30 +121,49 @@ end
 -- Function to display feedback
 function KeyMappingGame:display_feedback(is_correct, correct_answer)
     if is_correct then
-        print(colors.green .. "Correct!" .. colors.reset)
+        UI:display_message("Correct!", UI.colors.green)
     else
-        print("Incorrect. The correct key map is: " .. colors.green .. correct_answer .. colors.reset)
+        UI:display_message("Incorrect. The correct key map is: " .. colors.green .. correct_answer .. colors.reset, UI.colors.red)
     end
 end
 
 -- Function to display final score
 function KeyMappingGame:display_final_score()
-    print("-----------------------------------")
-    print("Game Over!")
-    print("Your final score is: " .. colors.green .. self.score .. " / " .. self.total_questions_initial .. colors.reset)
-    print("Level: " .. self.level)
-    print("-----------------------------------")
+    UI:draw_border()
+    UI:display_message("Game Over!", UI.colors.bright_magenta)
+    UI:display_message("Your final score is: " .. UI.colors.green .. self.score .. " / " .. self.total_questions_initial .. UI.colors.reset, UI.colors.white)
+    UI:display_message("Level: " .. self.level, UI.colors.white)
+    UI:draw_border()
+
+    -- Update high score
+    local is_new_highscore = Highscore:update_score("Vim Key Mapping Game", self.score)
+    if is_new_highscore then
+        UI:display_message("New High Score for Vim Key Mapping Game!", UI.colors.bright_magenta)
+    end
+
+    while true do
+        UI:display_message("\nWhat would you like to do next?", UI.colors.cyan)
+        UI:display_message("1. Play again", UI.colors.white)
+        UI:display_message("2. Return to main menu", UI.colors.white)
+        local choice = io.read()
+
+        if choice == "1" then
+            self:run_game()
+            break
+        elseif choice == "2" then
+            break
+        else
+            UI:display_message("Invalid choice. Please try again.", UI.colors.red)
+        end
+    end
 end
 
 -- Main function to run the game
 function KeyMappingGame:run_game()
-    common.clear_screen()
-    -- Setup game
-    print("Welcome to Vim Key Mapping Trainer!")
-    print("-----------------------------------")
+    UI:display_title("Vim Key Mapping Trainer!")
 
     -- Ask the user how many questions they want to answer
-    print("How many questions would you like to answer?")
+    UI:display_message("How many questions would you like to answer?", UI.colors.cyan)
     self.total_questions_initial = tonumber(self:get_user_input())
     self.total_questions = self.total_questions_initial
      -- test 
@@ -163,7 +179,7 @@ function KeyMappingGame:run_game()
         self:display_question(task)
 
         -- Get user answer 
-        print("Your answer: ")
+        UI:display_message("Your answer: ", UI.colors.yellow)
         local user_answer = self:get_user_input()
 
         -- Validate user input
@@ -185,7 +201,7 @@ function KeyMappingGame:run_game()
             -- Check if the user leveled up
             if self.score % 10 == 0 then
                 self.level = self.level + 1
-                print("Congratulations! You've reached Level " .. self.level .. "!")
+                UI:display_message("Congratulations! You've reached Level " .. self.level .. "!", UI.colors.bright_green)
             end
         end
 
@@ -196,4 +212,4 @@ function KeyMappingGame:run_game()
     self:display_final_score()
 end
 
-return KeyMappingGame
+return KeyMappingGame:create()
